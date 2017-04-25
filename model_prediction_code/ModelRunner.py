@@ -1,7 +1,9 @@
 import pandas as pd
 from pandas.tseries.offsets import Week
 import numpy as np
+import scipy.stats as scs
 import sklearn.mixture as mix
+from tqdm import tqdm
 
 
 class ModelRunner():
@@ -98,15 +100,17 @@ class ModelRunner():
         #                       loc=np.mean(rvs_), scale=np.std(rvs_))
         return ci
 
-    def prediction_cycle(self, *args, **kwargs):
+    def prediction_cycle(self, year, alpha, a, b, nSamples, lookback, mkt, **kwargs):
         """Function to make walk forward predictions from cutoff year onwards
 
         Params:
             year : int(), cutoff year
             alpha : float()
             a : float()
-            b : float() 
+            b : float()
             nsamples : int()
+            lookback : int(), years
+            mkt : str()
         Returns:
             dict() :
                 pred : pd.DataFrame()
@@ -145,6 +149,9 @@ class ModelRunner():
             # append tuple row to pred list
             pred_list.append((t, hstates[-1], mr_i, mvar_i, low_ci, high_ci))
             # increment insample dataframe
+            # insample increment includes the day 't'
+            #   should it include up to t! is it subtle lookahead!
+            #   not sure! i think it may be fine as is
             # trim dataframe
             insample = self.data.ix[t - lookback * 52 * Week():t]
             # note the cycle increments after we set the new insample
@@ -163,3 +170,4 @@ class ModelRunner():
         # assign binary variables sequence to new column
         pred_df['in_rng'] = in_rng_list
         return {'pred': pred_df, 'year': year, 'a': a, 'b': b}
+
