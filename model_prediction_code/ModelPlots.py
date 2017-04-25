@@ -32,8 +32,7 @@ class ModelPlots():
         self.mkt = mkt
         self.post_events = post_events
         self.event_state = event_state
-        self.DIR = project_dir + file_fmt + '/'
-        self.file_fmt = file_fmt
+        self.DIR = project_dir
         self.year = year
         self.today = pd.datetime.today().strftime("%Y-%m-%d %R")
 
@@ -70,13 +69,13 @@ class ModelPlots():
         ax.set_xlim(pd.to_datetime(str(self.year) + '-12-31'),
                     return_data.index[-1])
         ax.set_xlabel('Dates')
-        ax.set_title(f"{self.mkt}\nJohnsonSU Distribution | {self.event_state.upper()}\n{self.file_fmt}",
+        ax.set_title(f"{self.mkt}\nJohnsonSU Distribution | {self.event_state.upper()}",
                      fontsize=16)
         ax.legend(loc='upper right', fontsize=11,
                   frameon=True).get_frame().set_edgecolor('blue')
         sns.despine(offset=2)
         file_str = self.DIR + \
-            f'[JSU]-{self.mkt}-{self.event_state.upper()}-{self.file_fmt}-EquityCurve-{self.today}.png'
+            f'[JSU]-{self.mkt}-{self.event_state.upper()}-EquityCurve-{self.today}.png'
         fig.savefig(file_str, dpi=300)
         return
 
@@ -97,9 +96,9 @@ class ModelPlots():
                   frameon=True).get_frame().set_edgecolor('blue')
         sns.despine(offset=2)
         ax.set_title(
-            f"{self.mkt}\nJohnsonSU Distribution | {self.event_state.upper()}\n{self.file_fmt}", fontsize=16)
+            f"{self.mkt}\nJohnsonSU Distribution | {self.event_state.upper()}", fontsize=16)
         file_str = self.DIR + \
-            f'[JSU]-{self.mkt}-{self.event_state.upper()}-{self.file_fmt}-Distplot--{self.today}.png'
+            f'[JSU]-{self.mkt}-{self.event_state.upper()}-Distplot--{self.today}.png'
         fig.savefig(file_str, dpi=300)
         return
 
@@ -117,8 +116,8 @@ class ModelPlots():
 
         nRight = df.query('in_rng==1').shape[0]
         accuracy = nRight / df.shape[0]
-        ax.set_title('{:^10}\n[JSU] cutoff year: {} | accuracy: {:2.2%} | errors: {} | a={}, b={}\n{}'
-                     .format(self.mkt, year, accuracy, df.shape[0] - nRight, a, b, self.file_fmt))
+        ax.set_title('{:^10}\n[JSU] cutoff year: {} | accuracy: {:2.2%} | errors: {} | a={}, b={}'
+                     .format(self.mkt, year, accuracy, df.shape[0] - nRight, a, b))
 
         win_kwds = dict(color="white", marker='o', markersize=5)
         in_ = mpl.lines.Line2D(range(1), range(1),
@@ -135,6 +134,6 @@ class ModelPlots():
         leg.get_frame().set_edgecolor('blue')
         sns.despine(offset=2)
         file_str = self.DIR + \
-            f'[JSU]-{self.mkt}-{self.file_fmt}-PredictionPlot--{self.today}.png'
+            f'[JSU]-{self.mkt}-PredictionPlot--{self.today}.png'
         fig.savefig(file_str, dpi=300, bbox_inches="tight")
         return
