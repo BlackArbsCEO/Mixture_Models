@@ -145,9 +145,6 @@ class ModelRunner():
             # append tuple row to pred list
             pred_list.append((t, hstates[-1], mr_i, mvar_i, low_ci, high_ci))
             # increment insample dataframe
-            # insample increment includes the day 't'
-            #   should it include up to t! is it subtle lookahead!
-            #   not sure! i think it may be fine as is
             # trim dataframe
             insample = self.data.ix[t - lookback * 52 * Week():t]
             # note the cycle increments after we set the new insample
